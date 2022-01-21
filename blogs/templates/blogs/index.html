@@ -1,0 +1,65 @@
+{% extends "blogs/base.html" %}
+
+{% block page_header %}
+  <h3>Posts:</h3>
+{% endblock page_header %}
+
+{% block content %}
+  <p>
+    <a href="{% url 'blogs:new_post' %}">+ New post</a>
+  </p>
+
+  {% for post in blogposts %}
+    <div class="card mb-5">
+      <h6 class="card-header">
+        By: {{ post.owner }}
+        <small>&emsp;Posted on: {{ post.date_added|date:"n/j/Y"}}
+        </small>
+      </h6>
+      <div class="card-body">
+        <h4 class="card-title">{{ post.title }}</h4>
+          <p class="card-text">{{ post.text|linebreaks|truncatewords:68 }}{% if post.text|linebreaks|wordcount > 67 %}
+            <a href="{% url 'blogs:comments' post.id %}">Read more &raquo;</a>
+          
+          {% endif %}
+          </p>
+          <a href="{% url 'blogs:comments' post.id %}" >Comments</a>
+          {% if post.owner == request.user %}
+            &emsp; <a href="{% url 'blogs:edit_post' post.id %}">Edit post</a>
+            &emsp; <a href="{% url 'blogs:delete_post' post.id %}">Delete post</a>
+          {% endif %}
+      </div>
+    </div>
+
+  {% endfor %}
+
+{% endblock content %}
+<!-- 
+
+  <p>
+    <a href="{% url 'blogs:new_post' %}">New post</a>
+  </p>
+
+  <ul>
+    {% for post in blogposts %}
+      <li>
+        <p><b>{{ post }}</b></p>
+        <p>Posted by: {{ post.owner.username }}</p>
+        <p>{{ post.date_added|date:'M d, Y H:i' }}</p>
+        <p>{{ post.text|linebreaks }}</p>
+        <p>
+          <a href="{% url 'blogs:comments' post.id %}">Comments</a> &emsp;
+          {% if post.owner == request.user %}
+            <a href="{% url 'blogs:edit_post' post.id %}">Edit post</a> &emsp; <a href="{% url 'blogs:delete_post' post.id %}">Delete post</a>
+          {% endif %}
+          <br><br>
+        </p>
+
+      </li>
+
+    {% empty %}
+      <li>No posts have been made yet.</li>
+    {% endfor %}
+  </ul>
+
+-->

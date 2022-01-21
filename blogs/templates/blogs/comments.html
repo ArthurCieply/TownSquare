@@ -1,0 +1,36 @@
+{% extends 'blogs/base.html' %}
+
+{% block page_header %}
+  <a href="{% url 'blogs:index' %}">&laquo; Back to posts</a><br><br>
+  Posted by: <b>{{ post.owner }}</b> &sdot; {{ post.date_added|date:'M d, Y H:i' }}<br>
+  <h3>{{ title }}</h3>
+  <p>{{ text|linebreaks }}</p>
+  {% if post.owner == request.user %}
+    <a href="{% url 'blogs:edit_post' post.id %}">Edit post</a> &emsp; <a href="{% url 'blogs:delete_post' post.id %}">Delete post</a>
+  {% endif %}
+
+{% endblock page_header %}
+
+{% block content %}
+  <br>
+  <h5><p>Comments:</p></h5>
+  <a href="{% url 'blogs:add_comment' post.id %}">+ Add a comment</a>
+  <br><br><br>
+
+  {% for comment in comments %}
+    <div class="card mb-3">
+      <div class="card-header">
+        <b>{{ comment.owner }}</b> &sdot; {{ comment.date_added|date:'M d, Y H:i' }}
+      </div>
+      <div class="card-body">
+        {{ comment.text|linebreaks }}
+        {% if comment.owner == request.user %}
+          <a href="{% url 'blogs:delete_comment' comment.id %}">Delete comment</a>
+        {% endif %}
+      </div>
+    </div>
+  {% empty %}
+    <p>There are no comments for this post yet.</p>
+  {% endfor %}
+
+{% endblock content %}

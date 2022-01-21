@@ -1,0 +1,37 @@
+{% extends "blogs/base.html" %}
+{% load bootstrap4 %}
+
+{% block page_header %}
+  <p>Post: <a href="{% url 'blogs:comments' post.id %}">{{ post.title }}</a></p>
+  <h3>Delete post</h3>
+{% endblock page_header %}
+
+{% block content %}
+  <p>Are you sure you want to delete the following post?</p>
+
+  <b><p>Warning: Deleting this post will permanently delete all comments made on this post.</p></b>  
+
+  <form action="{% url 'blogs:delete_post' post.id %}" method='post' class="form">
+    {% csrf_token %}
+    <div class="card mb-5">
+      <h6 class="card-header">
+        By: {{ post.owner }}
+        <small>&emsp;Posted on: {{ post.date_added|date:"n/j/Y"}}
+        </small>
+      </h6>
+      <div class="card-body">
+        <h4 class="card-title">{{ post.title }}</h4>
+          <p class="card-text">{{ post.text|linebreaks|truncatewords:68 }}{% if post.text|linebreaks|wordcount > 67 %}</p>
+          {% endif %}
+      </div>
+    </div>
+    <br>
+    {% buttons %}
+      <a href="{% url 'blogs:comments' post.id %}" class="btn btn-secondary">Cancel</a> &emsp;
+      <button type="submit" name="delete" value="delete" class="btn btn-danger">Delete</button>
+    {% endbuttons %}
+  </form>
+
+{% endblock content %}
+
+
