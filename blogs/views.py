@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.http import Http404
 
@@ -47,7 +47,7 @@ def new_post(request):
 @login_required
 def edit_post(request, post_id):
     """Edit an existing blog post."""
-    post = BlogPost.objects.get(id=post_id)
+    post = get_object_or_404(BlogPost, id=post_id)
     text = post.text 
     title = post.title
     check_post_owner(post.owner, request)
@@ -68,7 +68,7 @@ def edit_post(request, post_id):
 @login_required
 def delete_post(request, post_id):
     """Delete an existing post."""
-    post = BlogPost.objects.get(id=post_id)
+    post = get_object_or_404(BlogPost, id=post_id)
     text = post.text
     title = post.title
     check_post_owner(post.owner, request)
@@ -86,7 +86,7 @@ def delete_post(request, post_id):
 
 def comments(request, post_id):
     """Comment section of a particular post."""
-    post = BlogPost.objects.get(id=post_id)
+    post = get_object_or_404(BlogPost, id=post_id)
     text = post.text 
     title = post.title
     comments = post.comment_set.order_by('-date_added')
@@ -97,7 +97,7 @@ def comments(request, post_id):
 @login_required
 def add_comment(request, post_id):
     """Add a comment on a specific post."""
-    post = BlogPost.objects.get(id=post_id)
+    post = get_object_or_404(BlogPost, id=post_id)
 
     if request.method != 'POST':    # Initial request
         form = CommentForm()        # Create blank form
@@ -117,7 +117,7 @@ def add_comment(request, post_id):
 @login_required
 def delete_comment(request, comment_id):
     """Delete an existing comment."""
-    comment = Comment.objects.get(id=comment_id)
+    comment = get_object_or_404(Comment, id=comment_id)
     post = comment.post
     check_comment_owner(comment.owner, request)
 
